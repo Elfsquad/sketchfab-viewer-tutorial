@@ -38,8 +38,10 @@ Let's start with creating creating a new HTML page that embeds a Sketchfab viewe
         const iframe = document.getElementById( 'api-frame' );
         const uid = 'cee9dd8f490c47469d2a4e64f99e8056'; // Replace with the ID of your model.
         const client = new Sketchfab( iframe );
+        let sketchfabApi;
         client.init( uid, {
             success: function onSuccess( api ){
+                sketchfabApi = api;
                 api.start();
                 api.addEventListener( 'viewerready', function() {
 
@@ -88,6 +90,7 @@ Update the `viewerready` event listener to first retrieve a node map of the mode
 let nodeMap = null;
 client.init( uid, {
     success: function onSuccess( api ){
+        sketchfabApi = api;
         api.start();
         api.addEventListener( 'viewerready', function() {
 

@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sketchfab Viewer API example</title>
+
+    <script type="text/javascript" src="https://static.sketchfab.com/api/sketchfab-viewer-1.12.1.js"></script>
+
+    <style>
+        html, body{
+            margin:0;
+            padding:0;
+            overflow: hidden;
+        }
+        iframe {
+            border:none;
+            height:100vh;
+            width:100vw;
+        }
+    </style>
+</head>
+
+<body>
+    <iframe src="" id="api-frame" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+
+    <script type="text/javascript">
+        const iframe = document.getElementById( 'api-frame' );
+        const uid = 'cee9dd8f490c47469d2a4e64f99e8056';
+        const client = new Sketchfab( iframe );
+        let sketchFabApi;
+        let nodeMap;
+        client.init( uid, {
+            success: function onSuccess( api ){
+                sketchFabApi = api;
+                api.start();
+                api.addEventListener( 'viewerready', function() {
+
+                    api.getNodeMap(function(err, nodes) {
+                        if (!err) {
+                            nodeMap = nodes;
+                            activateConfigurationUpdateListener();
+                        }
+                    });
+                } );
+            },
+            error: function onError() {
+                console.log( 'Viewer error' );
+            }
+        } );
+
+
+        function activateConfigurationUpdateListener() {
+            window.addEventListener('message', function(e){
+                if (e.data && e.data.name == 'elfsquad.configurationUpdated'){
+                    updateViewer(e.data.args);
+                }                 
+            });
+        }
+
+        function updateViewer(configuration) {
+            const stack = configuration.steps.map(step => step.features).flat(1);
+
+            while(stack.length > 0) {
+                const current = stack.pop();
+                for (let f of current.features) stack.push(f);
+                if (!current.code) continue;        
+                
+                const ids = Object.values(nodeMap)
+                    .filter(node => node.name == current.code)
+                    .map(node => node.instanceID);
+                
+                for (let id of ids) {
+                    if (current.isSelected) {
+                        sketchFabApi.show(id);
+                    } else {
+                        sketchFabApi.hide(id);
+                    }
+                }
+            }
+        }
+
+    </script>
+</body>
+</html>

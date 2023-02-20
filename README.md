@@ -60,7 +60,7 @@ Now you should be able to open the HTML file in your browser and see your 3D mod
 
 ![Screenshot 1](assets/screenshot-1.png)
 
-### 2. Run using webserver
+### 2. Serve through web server
 In order to be able to embed the viewer as a third party visualization within Elfsquad, the newly created HTML page needs to be served through a web server. For this tutorial it is sufficient to use localhost.
 
 From within the folder in which you created the HTML file type the following command:

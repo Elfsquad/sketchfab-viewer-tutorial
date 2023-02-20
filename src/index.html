@@ -28,11 +28,11 @@
         const iframe = document.getElementById( 'api-frame' );
         const uid = 'cee9dd8f490c47469d2a4e64f99e8056';
         const client = new Sketchfab( iframe );
-        let sketchFabApi;
+        let sketchfabApi;
         let nodeMap;
         client.init( uid, {
             success: function onSuccess( api ){
-                sketchFabApi = api;
+                sketchfabApi = api;
                 api.start();
                 api.addEventListener( 'viewerready', function() {
 
@@ -72,9 +72,9 @@
                 
                 for (let id of ids) {
                     if (current.isSelected) {
-                        sketchFabApi.show(id);
+                        sketchfabApi.show(id);
                     } else {
-                        sketchFabApi.hide(id);
+                        sketchfabApi.hide(id);
                     }
                 }
             }

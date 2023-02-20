@@ -121,7 +121,24 @@ Now we can define the `updateViewer` function. This function will be called when
 For this example I will recursively iterate over all the features in the configuration and based on whether the feature is enabled or not, I will either show or hide the corresponding part of the model. This is just an example and you can implement any logic you want here. 
 ```javascript
 function updateViewer(configuration) {
-    const stack = configuration.steps.map(step => step.features);
-    console.log('stack', stack);
+    const stack = configuration.steps.map(step => step.features).flat(1);
+
+    while(stack.length > 0) {
+        const current = stack.pop();
+        for (let f of current.features) stack.push(f);
+        if (!current.code) continue;        
+        
+        const ids = Object.values(nodeMap)
+            .filter(node => node.name == current.code)
+            .map(node => node.instanceID);
+        
+        for (let id of ids) {
+            if (current.isSelected) {
+                sketchfabApi.show(id);
+            } else {
+                sketchfabApi.hide(id);
+            }
+        }
+    }
 }
 ```

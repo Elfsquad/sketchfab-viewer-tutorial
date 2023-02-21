@@ -37,9 +37,14 @@
                 api.addEventListener( 'viewerready', function() {
 
                     api.getNodeMap(function(err, nodes) {
-                        if (!err) {
+                        if (!err) {                            
                             nodeMap = nodes;
+                            console.log('nodeMap', nodeMap);
                             activateConfigurationUpdateListener();
+
+                            window.top.postMessage({
+                                name: 'elfsquad.triggerConfigurationUpdated'
+                            }, '*');
                         }
                     });
                 } );
